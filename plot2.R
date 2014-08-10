@@ -1,0 +1,11 @@
+household <- read.table("household_power_consumption.txt", header = TRUE, sep = ";", 
+                        na.strings = "?", colClasses=c("character", "character", rep("numeric",7)))
+household$Date <- as.Date(household$Date, "%d/%m/%Y")
+householdfeb <- subset(household, household$Date == "2007-02-01" | household$Date == "2007-02-02")
+datetime <- paste(householdfeb$Date, householdfeb$Time)
+householdfeb <- cbind(householdfeb, datetime)
+householdfeb$datetime <- strptime(householdfeb$datetime, format = "%Y-%m-%d %H:%M:%S")
+plot(householdfeb$datetime, householdfeb$Global_active_power, ylab = "Global Active Power (kilowatts)", xlab=NA, type="n")
+lines(householdfeb$datetime, householdfeb$Global_active_power)
+dev.copy(png, file="plot2.png")
+dev.off()
